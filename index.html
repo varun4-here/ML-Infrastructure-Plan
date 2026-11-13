@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Systems & AI Infrastructure — 24-Week Employability-First Blueprint</title>
+  <style>
+    :root {
+      --bg-canvas: #0d1117;
+      --bg-surface: #161b22;
+      --bg-surface-hover: #1c2128;
+      --border: #30363d;
+      --border-subtle: rgba(48, 54, 61, 0.65);
+      --accent: #58a6ff;
+      --accent-dim: rgba(88, 166, 255, 0.14);
+      --accent-border: rgba(88, 166, 255, 0.45);
+      --success: #3fb950;
+      --success-dim: rgba(63, 185, 80, 0.14);
+      --success-border: rgba(63, 185, 80, 0.45);
+      --warning: #d29922;
+      --warning-dim: rgba(210, 153, 34, 0.12);
+      --warning-border: rgba(210, 153, 34, 0.45);
+      --purple: #bc8cff;
+      --purple-dim: rgba(188, 140, 255, 0.14);
+      --purple-border: rgba(188, 140, 255, 0.45);
+      --danger: #f85149;
+      --danger-dim: rgba(248, 81, 73, 0.14);
+      --danger-border: rgba(248, 81, 73, 0.5);
+      --text-main: #c9d1d9;
+      --text-white: #f0f6fc;
+      --text-muted: #8b949e;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: rgba(88, 166, 255, 0.3);
+      color: var(--text-white);
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-canvas); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Sticky Top Command Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      border-bottom: 1px solid var(--border);
+      background: rgba(13, 17, 23, 0.96);
+      backdrop-filter: blur(8px);
+      padding: 12px 0;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--success);
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-family: var(--font-mono);
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-white);
+    }
+
+    .subtitle {
+      margin-top: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .stats-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .divider { color: var(--border); }
+    .stat-label { color: var(--text-muted); }
+    .stat-val-white { font-weight: 600; color: var(--text-white); }
+    .stat-val-green { font-weight: 600; color: var(--success); }
+    .stat-val-accent { font-weight: 600; color: var(--accent); }
+
+    .progress-track {
+      width: 80px;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .btn {
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      padding: 6px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-main);
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--text-white);
+      background: var(--bg-surface-hover);
+    }
+
+    .btn-danger {
+      color: var(--danger);
+    }
+    .btn-danger:hover {
+      border-color: var(--danger-border);
+      background: var(--danger-dim);
+      color: #ff7b72;
+    }
+
+    /* Filter Navigation */
+    nav {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-btn {
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      padding: 5px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-white);
+      border-color: #484f58;
+    }
+
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent-border);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .filter-btn.focus-btn.active {
+      background: var(--success-dim);
+      border-color: var(--success-border);
+      color: var(--success);
+    }
+
+    .nav-right {
+      margin-left: auto;
+    }
+
+    .blueprint-btn {
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid var(--warning-border);
+      background: var(--warning-dim);
+      padding: 5px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--warning);
+      transition: all 0.15s ease;
+    }
+    .blueprint-btn:hover {
+      background: rgba(210, 153, 34, 0.22);
+    }
+
+    /* Main Layout */
+    main {
+      padding-top: 24px;
+      padding-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Part Division Banner */
+    .part-banner {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: linear-gradient(90deg, rgba(88, 166, 255, 0.1) 0%, rgba(22, 27, 34, 0.9) 100%);
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .part-banner.part-two {
+      background: linear-gradient(90deg, rgba(188, 140, 255, 0.12) 0%, rgba(22, 27, 34, 0.9) 100%);
+      border-color: var(--purple-border);
+    }
+
+    .part-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+
+    .part-banner.part-two .part-label {
+      color: var(--purple);
+    }
+
+    .part-heading {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-top: 2px;
+    }
+
+    .part-desc {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    /* Blueprint Drawer (Part III & Master Reference) */
+    .blueprint-drawer {
+      border-radius: 8px;
+      border: 1px solid var(--warning-border);
+      background: var(--bg-surface);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .drawer-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+    }
+
+    .tag-warning {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--warning);
+      display: block;
+    }
+
+    .drawer-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-top: 2px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .ref-card {
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-canvas);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ref-card h3, .ref-card h4 {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .ref-card p, .ref-card li {
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .ref-card strong { color: var(--text-white); }
+    .ref-card ol, .ref-card ul { padding-left: 18px; }
+    .ref-section-sep { border-top: 1px solid var(--border); padding-top: 10px; }
+
+    table.stack-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      text-align: left;
+    }
+    table.stack-table th {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      color: var(--text-muted);
+    }
+    table.stack-table td {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.4);
+      color: var(--text-main);
+    }
+    table.stack-table td:first-child { color: var(--text-white); }
+    .text-green { color: var(--success) !important; }
+    .text-red { color: #ff7b72 !important; }
+    .text-purple { color: var(--purple) !important; }
+
+    .proj-mini-card {
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(22, 27, 34, 0.7);
+      padding: 12px;
+    }
+    .proj-mini-card .proj-name {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 4px;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      background: rgba(88, 166, 255, 0.12);
+      color: var(--accent);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.74rem;
+    }
+
+    /* Section 13 Starter Gatekeeper Card */
+    .starter-card {
+      border-radius: 8px;
+      border: 1px solid var(--accent-border);
+      background: var(--bg-surface);
+      padding: 18px;
+    }
+
+    .starter-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .starter-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+
+    .starter-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .starter-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-canvas);
+      padding: 3px 9px;
+      color: var(--accent);
+    }
+
+    .starter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 8px;
+    }
+
+    /* Month Sections & Week Cards */
+    .months-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .month-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .month-header {
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+    }
+
+    .month-header.part-two-border {
+      border-left-color: var(--purple);
+    }
+
+    .month-tag {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+
+    .month-header.part-two-border .month-tag {
+      color: var(--purple);
+    }
+
+    .month-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-top: 2px;
+    }
+
+    .month-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .weeks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+      gap: 16px;
+    }
+
+    .weeks-grid.single-focus {
+      grid-template-columns: minmax(300px, 780px);
+      justify-content: center;
+    }
+
+    @media (max-width: 500px) {
+      .weeks-grid { grid-template-columns: 1fr; }
+    }
+
+    .week-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      padding: 18px;
+      transition: border-color 0.2s ease;
+    }
+
+    .week-card.is-complete {
+      border-color: var(--success-border);
+    }
+
+    .week-card.is-active-week {
+      border-color: var(--accent-border);
+      box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.15);
+    }
+
+    .week-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+
+    .week-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+    }
+
+    .week-num {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .part-pill {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(88, 166, 255, 0.1);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      color: var(--accent);
+    }
+
+    .part-pill.p2 {
+      background: var(--purple-dim);
+      border-color: var(--purple-border);
+      color: var(--purple);
+    }
+
+    .active-pill {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--warning-dim);
+      border: 1px solid var(--warning-border);
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .week-topics {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-top: 4px;
+    }
+
+    .week-badge {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      border-radius: 4px;
+      padding: 2px 8px;
+      background: var(--bg-canvas);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .week-badge.done {
+      background: var(--success-dim);
+      color: var(--success);
+      border-color: var(--success-border);
+      font-weight: 600;
+    }
+
+    .output-pill {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      border-radius: 6px;
+      background: var(--bg-canvas);
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+    }
+
+    .output-label {
+      color: var(--success);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .output-val {
+      color: var(--text-white);
+    }
+
+    .tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border-radius: 6px;
+      padding: 5px 6px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .task-item:hover {
+      background: rgba(13, 17, 23, 0.65);
+    }
+
+    .task-item.is-output-task {
+      background: rgba(13, 17, 23, 0.92);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 10px;
+    }
+
+    .task-checkbox {
+      margin-top: 2px;
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      cursor: pointer;
+      accent-color: var(--success);
+    }
+
+    .task-text {
+      font-size: 0.8rem;
+      line-height: 1.48;
+      color: var(--text-main);
+      user-select: none;
+    }
+
+    .task-item.is-output-task .task-text {
+      color: var(--text-white);
+      font-weight: 500;
+    }
+
+    .task-checkbox:checked + .task-text {
+      text-decoration: line-through;
+      color: #6e7681;
+    }
+
+    /* Per-Week Measurable Exit Check */
+    .week-exit-box {
+      margin-top: 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px dashed var(--border);
+      background: rgba(13, 17, 23, 0.55);
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .week-exit-box strong {
+      color: var(--warning);
+    }
+
+    /* Engineering Notes Footer */
+    .notes-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .note-toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      padding: 2px 0;
+    }
+
+    .note-toggle-btn:hover { color: var(--accent); }
+
+    .note-textarea {
+      width: 100%;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-canvas);
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-main);
+      resize: vertical;
+    }
+
+    .note-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Monthly Exit Criteria Banner */
+    .exit-banner {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(22, 27, 34, 0.85);
+      padding: 13px 16px;
+      transition: all 0.2s ease;
+    }
+
+    .exit-banner.checked {
+      border-color: var(--success-border);
+      background: var(--success-dim);
+    }
+
+    .exit-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .exit-text {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-white);
+      user-select: none;
+    }
+
+    .exit-banner.checked .exit-text {
+      color: var(--success);
+    }
+
+    /* Modal & Toast */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.78);
+      padding: 16px;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      padding: 22px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-title {
+      font-family: var(--font-mono);
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-solid-danger {
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background: #da3633;
+      padding: 7px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .btn-solid-danger:hover { background: #f85149; }
+
+    .toast-container {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      border-radius: 6px;
+      border: 1px solid var(--accent);
+      background: var(--bg-surface);
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-white);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      transition: opacity 0.25s ease;
+    }
+
+    .toast.error {
+      border-color: var(--danger);
+      color: #ff7b72;
+    }
+
+    footer {
+      margin-top: 32px;
+      border-top: 1px solid var(--border);
+      background: rgba(22, 27, 34, 0.5);
+      padding: 20px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirm-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <h3 class="modal-title">Confirm Reset</h3>
+      <p class="modal-desc">This will clear all checked tasks, exit criteria, and weekly engineering notes stored in your browser. Export a JSON backup first if you want to keep a copy.</p>
+      <div class="modal-actions">
+        <button id="cancel-reset-btn" class="btn">Cancel</button>
+        <button id="confirm-reset-btn" class="btn-solid-danger">Reset All Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Top Command Bar -->
+  <header>
+    <div class="container">
+      <div class="header-top">
+        <div>
+          <div class="brand">
+            <span class="status-dot"></span>
+            <h1>Systems &amp; AI Infrastructure — 24-Week Employability-First Blueprint</h1>
+          </div>
+          <p class="subtitle">
+            30–35 hrs/week · Part I (W1–20): C++/DSA/OS/Net &rarr; Concurrent Engine &rarr; CUDA/OSS/Internships · Part II (W21–24): Attention &amp; Inference
+          </p>
+        </div>
+
+        <div class="stats-controls">
+          <div class="stats-pill">
+            <div>
+              <span class="stat-label">TASKS:</span>
+              <span id="stat-tasks" class="stat-val-white">0/0</span>
+            </div>
+            <span class="divider">|</span>
+            <div>
+              <span class="stat-label">WEEKS DONE:</span>
+              <span id="stat-weeks" class="stat-val-green">0/24</span>
+            </div>
+            <span class="divider">|</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="progress-track">
+                <div id="stat-bar" class="progress-fill"></div>
+              </div>
+              <span id="stat-pct" class="stat-val-accent">0%</span>
+            </div>
+          </div>
+
+          <div class="action-group">
+            <button id="export-btn" class="btn" title="Download JSON backup">Export JSON</button>
+            <label class="btn" title="Restore JSON backup">
+              Import JSON
+              <input id="import-input" type="file" accept=".json" class="hidden" />
+            </label>
+            <button id="reset-btn" class="btn btn-danger" title="Reset progress">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation / Month & Focus Filter Tabs -->
+      <nav>
+        <button data-filter="all" class="filter-btn active">All 24 Weeks</button>
+        <button data-filter="current" class="filter-btn focus-btn">Focus: Current Active Week</button>
+        <button data-filter="1" class="filter-btn">M1: C++ &amp; DSA</button>
+        <button data-filter="2" class="filter-btn">M2: OS &amp; Net</button>
+        <button data-filter="3" class="filter-btn">M3: Task Engine &amp; OSS</button>
+        <button data-filter="4" class="filter-btn">M4: CUDA &amp; Apps</button>
+        <button data-filter="5" class="filter-btn">M5: OSS &amp; Tensor</button>
+        <button data-filter="6" class="filter-btn">M6: AI Infra Bridge</button>
+        <div class="nav-right">
+          <button id="toggle-blueprint-btn" class="blueprint-btn">
+            [ + ] Master Blueprint &amp; Part III (Months 7–24)
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+
+    <!-- Collapsible Master Blueprint & Part III Reference Drawer -->
+    <section id="blueprint-drawer" class="blueprint-drawer hidden">
+      <div class="drawer-header">
+        <div>
+          <span class="tag-warning">MASTER BLUEPRINT &amp; PART III // LONG-TERM SPECIALIZATION</span>
+          <h2 class="drawer-title">Employability-First Strategy (30–35 hrs/wk) &amp; Months 7–24 AI Infrastructure Horizon</h2>
+        </div>
+        <button id="close-blueprint-btn" class="btn">Hide Reference</button>
+      </div>
+
+      <div class="grid-2">
+        <!-- 1. Employability-First Strategy & Weekly Allocation -->
+        <div class="ref-card">
+          <h3>1. Employability-First Strategy &amp; 30–35h Weekly Split</h3>
+          <p>
+            <strong>Core Shift:</strong> Instead of waiting 6 months in isolation before touching open source or interviews, Months 1–5 front-load <strong>systems fundamentals, DSA interview readiness, concurrency/networking, CUDA kernels, and real open-source PRs</strong> so you can compete for Systems SWE, Performance, GPU, and ML Infrastructure internships by Month 4–5.
+          </p>
+          <div class="ref-section-sep" style="font-family:var(--font-mono);">
+            <p style="margin-bottom:6px;"><strong>Weekly Time Allocation (33h target / 30–35h range):</strong></p>
+            <ul>
+              <li><strong>Systems / C++ / CUDA Implementation:</strong> 12h</li>
+              <li><strong>DSA &amp; LeetCode Interview Prep:</strong> 7h (1–2 problems/day)</li>
+              <li><strong>OS, Networking &amp; GPU Architecture Theory:</strong> 6h</li>
+              <li><strong>Open-Source Contributions &amp; Applications:</strong> 5h</li>
+              <li><strong>Benchmarking, Notes &amp; Mock Review:</strong> 3h</li>
+            </ul>
+          </div>
+          <div class="ref-section-sep">
+            <p><strong>Four Governing Principles:</strong> (1) Systems programming before systems engineering • (2) CPU execution &amp; OS concurrency before GPU execution • (3) Model execution before model serving • (4) Demonstrable, benchmarked PRs &amp; repos before buzzwords.</p>
+          </div>
+        </div>
+
+        <!-- 2. Technology Stack & 3 Core Portfolio Repositories -->
+        <div class="ref-card">
+          <h3>2. Core Stack &amp; 3 Flagship GitHub Repositories</h3>
+          <div style="overflow-x:auto;">
+            <table class="stack-table">
+              <thead>
+                <tr>
+                  <th>Domain</th>
+                  <th>Stack / Tools</th>
+                  <th>Window</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Systems &amp; DSA</td><td>C++17/20, STL, Linux/WSL2, GCC, CMake, GDB, ASan/TSan</td><td class="text-green">Month 1+</td></tr>
+                <tr><td>OS &amp; Networking</td><td>POSIX threads, atomics, epoll, TCP sockets, HTTP/1.1</td><td class="text-green">Month 2+</td></tr>
+                <tr><td>GPU Computing</td><td>CUDA C++, nvcc, Nsight Systems, Nsight Compute</td><td class="text-green">Month 4+</td></tr>
+                <tr><td>ML Reference &amp; Bridge</td><td>Python, NumPy, PyTorch, Custom C++/CUDA Extensions</td><td class="text-green">Month 5–6</td></tr>
+                <tr><td>Inference &amp; Distributed</td><td>Triton, vLLM / PagedAttention, llama.cpp, NCCL, FSDP</td><td class="text-purple">Months 7–24</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ref-section-sep">
+            <p style="margin-bottom:4px;"><strong>3 Interview-Grade Repositories (by Week 24):</strong></p>
+            <ul>
+              <li><code>01. concurrent-task-engine</code> — Work-stealing/priority thread pool, DAG scheduler, arena allocator, epoll RPC/server, TSan-clean benchmarks.</li>
+              <li><code>02. cuda-kernel-lab</code> — Vector add, warp reductions, register-tiled GEMM vs cuBLAS, Softmax, LayerNorm, fused kernels, Nsight Roofline reports.</li>
+              <li><code>03. mini-tensor-attention-lab</code> — Strided C++/CUDA tensor engine + FlashAttention-style tiled online-softmax &amp; KV-cache inference prototype.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Part III — Months 7–24 Long-Term Specialization Blueprint -->
+      <div class="ref-card">
+        <h3>3. Part III — Months 7–24 Long-Term AI Infrastructure Specialization Blueprint</h3>
+        <div class="grid-2">
+          <div class="proj-mini-card">
+            <div class="proj-name">Months 7–9 · Mini Transformer Inference Runtime (Project 5)</div>
+            <p>Extend Week 21–24 attention &amp; KV-cache primitives into a standalone C++/CUDA inference runtime executing a small pretrained decoder-only transformer (e.g., GPT-2 / Llama-architecture small weights). Implement embeddings, RMSNorm/LayerNorm, RoPE, SwiGLU, prefill vs. decode phases, and benchmark latency/memory bandwidth.</p>
+          </div>
+          <div class="proj-mini-card">
+            <div class="proj-name">Months 9–12 · Inference Serving Engine &amp; Triton (Project 6)</div>
+            <p>Turn the runtime into a multi-tenant serving engine: request queue, dynamic &amp; continuous (iteration-level) batching, PagedAttention block-table KV-cache allocator, preemption/reclamation. Measure TTFT, ITL (inter-token latency), throughput (tok/s), and p99 tail latency. Write custom Triton kernels and study vLLM &amp; llama.cpp internals.</p>
+          </div>
+          <div class="proj-mini-card">
+            <div class="proj-name">Months 12–18 · Distributed Training &amp; Collective Comm (Project 7)</div>
+            <p>Move beyond single-GPU constraints on multi-GPU cloud/lab nodes: multi-process workers, ring All-Reduce, NCCL collectives, DDP gradient bucketing &amp; comm/compute overlap, FSDP / ZeRO stage 1–3 parameter sharding, and multi-GPU scaling efficiency experiments. Read ZeRO &amp; Megatron-LM papers.</p>
+          </div>
+          <div class="proj-mini-card">
+            <div class="proj-name">Months 18–24 · Distributed Inference &amp; Research Depth (Project 8)</div>
+            <p>Scale inference across multiple GPUs: Tensor Parallelism (column/row-parallel linear layers with All-Reduce), Pipeline Parallelism (micro-batch scheduling, bubble minimization), disaggregated prefill/decode exploration, and upstream open-source contributions (vLLM, CUTLASS, Triton, PyTorch).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Hardware, Open-Source Targets & Anti-Goals -->
+      <div class="grid-3">
+        <div class="ref-card">
+          <h4>Hardware &amp; Profiling Environment</h4>
+          <p><strong>Local Workstation:</strong> ASUS TUF (Ryzen 7 6800H 8C/16T, NVIDIA RTX 3050 Ti, 16 GB RAM), Ubuntu Linux / WSL2.</p>
+          <p><strong>Profilers &amp; Sanitizers:</strong> AddressSanitizer (ASan), ThreadSanitizer (TSan), UndefinedBehaviorSanitizer (UBSan), Linux <code>perf</code>, NVIDIA Nsight Systems &amp; Nsight Compute.</p>
+        </div>
+        <div class="ref-card">
+          <h4>Open-Source &amp; Internship Pipeline</h4>
+          <p><strong>OSS Progression:</strong> M3: Good-first-issues (docs, tests, benchmarks) in C++/systems repos &rarr; M4–5: Bugfixes/kernel tests in Eigen, llama.cpp, GGML, or PyTorch/CUTLASS &rarr; M6+: GSoC, LFX Mentorship, Outreachy, and Systems/ML-Infra internships.</p>
+        </div>
+        <div class="ref-card">
+          <h4>Deliberate Exclusions (Scope Guardrails)</h4>
+          <p class="text-red"><strong>NOT Doing:</strong> Skipping DSA/OS/Networking for pure ML • Learning Rust/Go simultaneously • Building generic CRUD/LLM-wrapper apps • Claiming speedup numbers without Nsight/perf evidence • Redesigning this roadmap mid-sprint.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 13 Immediate Starting Checklist -->
+    <section id="starting-checklist-card" class="starter-card">
+      <div class="starter-header">
+        <div>
+          <span class="starter-tag">PRE-FLIGHT GATEKEEPER // WEEK 1 LAUNCH CHECKLIST</span>
+          <h2 class="starter-title">Immediate Environment, Toolchain &amp; DSA Setup (Complete First)</h2>
+        </div>
+        <span id="starter-count" class="starter-badge">0/8 completed</span>
+      </div>
+      <div id="starter-tasks-grid" class="starter-grid"></div>
+    </section>
+
+    <!-- 24 Organized Weekly Blocks Container -->
+    <div id="months-container" class="months-wrapper"></div>
+
+  </main>
+
+  <footer>
+    <p>EMPLOYABILITY-FIRST SYSTEMS &amp; AI INFRASTRUCTURE ROADMAP // 30–35 HRS/WEEK // SHIP DELIVERABLES, BENCHMARKS &amp; PRs EVERY WEEK.</p>
+  </footer>
+
+  <script>
+    const ROADMAP_DATA = {
+      starterChecklist: [
+        { id: "start-1", text: "Configure Ubuntu Linux or WSL2 as primary C++ & CUDA development environment" },
+        { id: "start-2", text: "Install and verify GCC/G++, Clang, CMake, Git, GDB, AddressSanitizer & ThreadSanitizer" },
+        { id: "start-3", text: "Set up LeetCode / NeetCode C++ problem-solving workspace with local test runner" },
+        { id: "start-4", text: "Create clean GitHub profile & structured C++ foundations repository with CI workflow" },
+        { id: "start-5", text: "Master pointers, references, stack vs. heap layout, and RAII resource ownership" },
+        { id: "start-6", text: "Solve first 15 C++ array/hashing/two-pointer DSA problems without looking up solutions" },
+        { id: "start-7", text: "Debug a segmentation fault and memory leak independently using GDB + ASan" },
+        { id: "start-8", text: "Bookmark 3 target C++/systems open-source repositories and inspect their build/test setup" }
+      ],
+      months: [
+        {
+          month: 1,
+          part: 1,
+          title: "Month 1 — C++17/20 + DSA + Linux Foundations",
+          subtitle: "Part I: Employability Sprint | 30–35 hrs/wk: 12h C++ Systems • 7h DSA • 6h Linux/OS Basics • 5h Repo Setup • 3h Review",
+          exitCriteriaId: "exit-m1",
+          exitCriteriaText: "Month 1 Exit Criteria: 60+ DSA problems solved in C++, custom STL-like containers built with zero ASan/UBSan errors, and multi-file CMake CLI project published.",
+          weeks: [
+            {
+              week: 1,
+              topics: "Modern C++ Core, Linux Toolchain & Arrays/Hashing DSA",
+              output: "CMake C++17/20 starter repo + 15 solved Arrays/Hashing DSA problems",
+              tasks: [
+                { id: "w1-1", text: "Set up GCC/G++, CMake, GDB, and sanitizer flags (-fsanitize=address,undefined) on Linux/WSL2" },
+                { id: "w1-2", text: "Master C++ compilation model, references, const-correctness, value categories, and control flow" },
+                { id: "w1-3", text: "DSA (7h): Solve 15 problems on Arrays, Hashing, Prefix Sums, and Two Pointers in C++" },
+                { id: "w1-4", text: "Practical Output: Build a multi-file CMake C++ CLI log/text analyzer with unit tests and clean ASan run" }
+              ],
+              exitCheck: "Project compiles cleanly with -Wall -Wextra -Werror and passes all unit tests with 0 ASan leaks."
+            },
+            {
+              week: 2,
+              topics: "Pointers, Manual Memory, Custom Vector/String & Sliding Window/Stack DSA",
+              output: "Custom RAII DynamicArray<T> & StringBuffer + 30 cumulative DSA problems",
+              tasks: [
+                { id: "w2-1", text: "Implement Rule of Five (copy/move constructors & assignment) and manual heap allocation" },
+                { id: "w2-2", text: "Implement templated DynamicArray<T> with geometric growth, iterators, and move semantics" },
+                { id: "w2-3", text: "DSA (7h): Solve 15 problems on Sliding Window, Monotonic Stack, and Binary Search" },
+                { id: "w2-4", text: "Practical Output: Publish custom STL-style DynamicArray<T> & Arena buffer with move-vs-copy benchmarks" }
+              ],
+              exitCheck: "30+ total DSA problems solved; DynamicArray<T> passes stress tests under ASan + Valgrind/UBSan."
+            },
+            {
+              week: 3,
+              topics: "Smart Pointers, Templates, HashMap Internals & Linked Lists/Trees DSA",
+              output: "Open-Addressing HashMap<K,V> + 45 cumulative DSA problems",
+              tasks: [
+                { id: "w3-1", text: "Master std::unique_ptr, std::shared_ptr, std::weak_ptr, custom deleters, and type traits/templates" },
+                { id: "w3-2", text: "Implement an open-addressing linear-probing HashMap<K,V> in C++ and benchmark vs std::unordered_map" },
+                { id: "w3-3", text: "DSA (7h): Solve 15 problems on Linked Lists, Binary Trees, BSTs, and DFS/BFS traversals" },
+                { id: "w3-4", text: "Practical Output: Custom HashMap<K,V> library with lookup/insert latency benchmarks vs STL" }
+              ],
+              exitCheck: "45+ total DSA problems solved; custom HashMap beats std::unordered_map on cache-local integer keys."
+            },
+            {
+              week: 4,
+              topics: "Linux Processes, File Descriptors, Debugging & Graphs/DP DSA",
+              output: "Linux System Monitor / Proc-Inspector CLI + 60 cumulative DSA problems",
+              tasks: [
+                { id: "w4-1", text: "Study Linux /proc filesystem, file descriptors, POSIX system calls (open, read, stat, fork, exec)" },
+                { id: "w4-2", text: "Practice GDB watchpoints, core dumps, and Linux perf stat profiling on C++ binaries" },
+                { id: "w4-3", text: "DSA (7h): Solve 15 problems on Graphs (topological sort, shortest path) and 1D/2D Dynamic Programming" },
+                { id: "w4-4", text: "Practical Output: Build a Linux /proc process & memory inspector CLI tool in C++17" }
+              ],
+              exitCheck: "60+ DSA problems solved; CLI tool parses live /proc metrics with zero memory or FD leaks."
+            }
+          ]
+        },
+        {
+          month: 2,
+          part: 1,
+          title: "Month 2 — OS Internals + Concurrency + Networking",
+          subtitle: "Part I: Employability Sprint | 30–35 hrs/wk: Virtual Memory • Mutex/Atomics/Lock-Free • epoll/TCP/HTTP • 100+ Cumulative DSA",
+          exitCriteriaId: "exit-m2",
+          exitCriteriaText: "Month 2 Exit Criteria: ThreadSanitizer-clean concurrent data structures, non-blocking epoll HTTP/TCP server handling 10k+ concurrent connections, and 100+ DSA problems solved.",
+          weeks: [
+            {
+              week: 5,
+              topics: "OS Virtual Memory, Paging, Processes/Threads & Heap/PriorityQueue DSA",
+              output: "Memory-mapped file reader & custom Slab/Pool allocator prototype",
+              tasks: [
+                { id: "w5-1", text: "Study OS virtual memory, page tables, TLB, mmap, copy-on-write, and process vs. thread context switching" },
+                { id: "w5-2", text: "Implement a zero-copy mmap file parser and fixed-size block pool allocator" },
+                { id: "w5-3", text: "DSA (7h): Solve 12 problems on Heaps / Priority Queues and Intervals" },
+                { id: "w5-4", text: "Practical Output: Benchmark custom fixed-block pool allocator vs standard malloc/new under heavy churn" }
+              ],
+              exitCheck: "Pool allocator demonstrates >=3x allocation throughput over default new/delete in micro-benchmark."
+            },
+            {
+              week: 6,
+              topics: "Threads, Mutexes, Condition Variables & Bounded Blocking Queue",
+              output: "Multi-threaded Producer-Consumer Pipeline (TSan verified)",
+              tasks: [
+                { id: "w6-1", text: "Master std::thread, std::mutex, std::unique_lock, std::condition_variable, and deadlock prevention" },
+                { id: "w6-2", text: "Build a thread-safe bounded MPMC blocking queue with graceful shutdown signaling" },
+                { id: "w6-3", text: "DSA (7h): Solve 12 problems on Backtracking and Trie / Bit Manipulation" },
+                { id: "w6-4", text: "Practical Output: Multi-threaded log/data ingestion pipeline verified under ThreadSanitizer (-fsanitize=thread)" }
+              ],
+              exitCheck: "Zero data races or deadlocks across 100,000+ concurrent enqueue/dequeue operations under TSan."
+            },
+            {
+              week: 7,
+              topics: "Atomics, Memory Ordering, False Sharing & Lock-Free SPSC Ring Buffer",
+              output: "Lock-free SPSC Ring Buffer with cache-line padding + latency report",
+              tasks: [
+                { id: "w7-1", text: "Study CPU cache coherence (MESI), false sharing (alignas(64)), std::atomic, and acquire/release memory ordering" },
+                { id: "w7-2", text: "Implement a lock-free Single-Producer Single-Consumer (SPSC) ring buffer in C++20" },
+                { id: "w7-3", text: "DSA (7h): Solve 10 mixed medium/hard Graph & DP problems under timed interview conditions (45 min)" },
+                { id: "w7-4", text: "Practical Output: Benchmark mutex queue vs. lock-free SPSC ring buffer (p50/p99 latency & throughput)" }
+              ],
+              exitCheck: "Lock-free SPSC queue passes TSan stress test and shows measurable p99 tail-latency reduction over mutex queue."
+            },
+            {
+              week: 8,
+              topics: "TCP Sockets, Non-Blocking I/O, epoll Event Loop & HTTP/1.1 Server",
+              output: "Multithreaded epoll TCP / HTTP Server benchmarked with wrk/ab",
+              tasks: [
+                { id: "w8-1", text: "Study TCP/IP stack, sockets API (socket, bind, listen, accept), non-blocking FDs, and Linux epoll" },
+                { id: "w8-2", text: "Implement an edge-triggered epoll event loop with a worker thread pool for request handling" },
+                { id: "w8-3", text: "DSA (7h): Complete timed weekly DSA mock set (reach 100+ total solved problems)" },
+                { id: "w8-4", text: "Practical Output: Lightweight C++ HTTP/1.1 / KV-store TCP server benchmarked for QPS and p99 latency" }
+              ],
+              exitCheck: "100+ DSA problems solved; epoll server handles concurrent load cleanly with zero dropped requests or FD leaks."
+            }
+          ]
+        },
+        {
+          month: 3,
+          part: 1,
+          title: "Month 3 — Flagship Project (Concurrent Task Engine) + Open Source",
+          subtitle: "Part I: Employability Sprint | Flagship Repo 01: concurrent-task-engine • Work-Stealing • DAG Scheduler • First OSS PRs",
+          exitCriteriaId: "exit-m3",
+          exitCriteriaText: "Month 3 Exit Criteria: Published concurrent-task-engine repo with full throughput/tail-latency benchmarks, TSan/ASan CI, and at least 1 merged/submitted OSS PR.",
+          weeks: [
+            {
+              week: 9,
+              topics: "Task Engine Architecture, Futures/Promises & Work-Stealing Thread Pool",
+              output: "Core ThreadPool with submit() returning std::future<T> + work stealing",
+              tasks: [
+                { id: "w9-1", text: "Initialize flagship repo 01 (concurrent-task-engine) with CMake, GoogleTest/Catch2, and GitHub Actions CI" },
+                { id: "w9-2", text: "Implement per-worker deques with work-stealing scheduling to minimize lock contention" },
+                { id: "w9-3", text: "OSS Prep (5h): Clone 2 target C++ open-source repos, build from source, run test suites, and map architecture" },
+                { id: "w9-4", text: "Practical Output: Work-stealing thread pool supporting arbitrary callable tasks and typed futures" }
+              ],
+              exitCheck: "Work-stealing pool passes TSan tests and scales across all 8 cores / 16 threads of Ryzen 7 6800H."
+            },
+            {
+              week: 10,
+              topics: "DAG Task Dependency Graph, Priorities & Cancellation",
+              output: "DAG execution engine resolving dependent task graphs in parallel",
+              tasks: [
+                { id: "w10-1", text: "Implement Directed Acyclic Graph (DAG) task scheduler with atomic in-degree dependency tracking" },
+                { id: "w10-2", text: "Add task priority queues (high/normal/low) and cooperative cancellation tokens" },
+                { id: "w10-3", text: "DSA & OSS (9h): Solve 8 Graph/Topological-Sort problems + claim your first 'good first issue' on GitHub" },
+                { id: "w10-4", text: "Practical Output: Parallel DAG pipeline demo (e.g., multi-stage data/compute pipeline) with zero race conditions" }
+              ],
+              exitCheck: "Complex 50-node diamond DAGs execute in valid topological order with deterministic results."
+            },
+            {
+              week: 11,
+              topics: "Arena Memory Allocator, CPU Cache Locality & First OSS PR",
+              output: "Custom task-local Arena Allocator + First submitted Open-Source PR",
+              tasks: [
+                { id: "w11-1", text: "Integrate a fast bump/arena allocator for zero-malloc task frame allocation" },
+                { id: "w11-2", text: "Profile cache misses and context switches using Linux perf stat / perf record" },
+                { id: "w11-3", text: "Open Source (6h): Submit your first clean PR (test coverage, doc fix, or small bugfix) to an established C++ repo" },
+                { id: "w11-4", text: "Practical Output: Measurable task-dispatch overhead reduction (nanoseconds/task) after arena integration" }
+              ],
+              exitCheck: "At least 1 real GitHub PR opened against an external repository; task dispatch latency measured in nanoseconds."
+            },
+            {
+              week: 12,
+              topics: "Benchmarking Harness, Documentation & Architecture Write-Up",
+              output: "Completed v1.0 release of concurrent-task-engine with full benchmark report",
+              tasks: [
+                { id: "w12-1", text: "Benchmark single-thread vs. N-thread scaling, fine-grained vs. coarse tasks, and p50/p95/p99 tail latency" },
+                { id: "w12-2", text: "Write thorough README with ASCII/SVG architecture diagram, design trade-offs, and reproducible scripts" },
+                { id: "w12-3", text: "DSA & OSS (8h): Review top 30 systems/concurrency interview questions + respond to OSS PR review feedback" },
+                { id: "w12-4", text: "Practical Output: Tagged v1.0 release of concurrent-task-engine ready to feature on resume" }
+              ],
+              exitCheck: "Repo 01 is interview-ready with reproducible charts, zero sanitizer warnings, and clear engineering write-up."
+            }
+          ]
+        },
+        {
+          month: 4,
+          part: 1,
+          title: "Month 4 — CUDA Fundamentals + OSS Code PRs + Applications",
+          subtitle: "Part I: Employability Sprint | Flagship Repo 02: cuda-kernel-lab • RTX 3050 Ti • Code PRs • Internship Applications Launch",
+          exitCriteriaId: "exit-m4",
+          exitCriteriaText: "Month 4 Exit Criteria: Verified CUDA kernels (reduction, coalesced transpose, shared-memory GEMM) profiled in Nsight, 2+ OSS PRs submitted, and 20+ targeted applications sent.",
+          weeks: [
+            {
+              week: 13,
+              topics: "GPU Architecture, CUDA Execution Model & Internship Resume Prep",
+              output: "cuda-kernel-lab repo + verified CUDA vector ops + draft systems resume",
+              tasks: [
+                { id: "w13-1", text: "Set up CUDA Toolkit & nvcc CMake build on RTX 3050 Ti; study SMs, warps, SIMT, and host-device transfers" },
+                { id: "w13-2", text: "Implement grid-stride vector addition & element-wise kernels verified against CPU references" },
+                { id: "w13-3", text: "Employability (5h): Draft 1-page Systems/AI-Infra resume highlighting C++, OS/networking, Task Engine & OSS" },
+                { id: "w13-4", text: "Practical Output: Working CUDA build pipeline + resume reviewed and tightened with quantified metrics" }
+              ],
+              exitCheck: "First CUDA kernels compile/run cleanly on RTX 3050 Ti; 1-page technical resume finalized."
+            },
+            {
+              week: 14,
+              topics: "Parallel Reductions, Warp Primitives & First 10 Applications",
+              output: "Warp-shuffled reduction kernel + 10 targeted internship/SWE applications",
+              tasks: [
+                { id: "w14-1", text: "Implement tree-based parallel reduction, eliminate warp divergence, and optimize with __shfl_down_sync" },
+                { id: "w14-2", text: "Benchmark reduction bandwidth (GB/s) against RTX 3050 Ti theoretical peak memory bandwidth" },
+                { id: "w14-3", text: "Applications & DSA (8h): Submit 10 targeted Systems/Backend/GPU internship applications + 8 DSA problems" },
+                { id: "w14-4", text: "Practical Output: High-throughput warp-reduction kernel achieving >75% peak device memory bandwidth" }
+              ],
+              exitCheck: "10 applications logged; reduction kernel verified numerically and benchmarked in GB/s."
+            },
+            {
+              week: 15,
+              topics: "Memory Coalescing, Shared Memory Transpose & OSS Bugfix/Feature PR",
+              output: "Coalesced shared-memory matrix transpose + 2nd Open-Source PR",
+              tasks: [
+                { id: "w15-1", text: "Measure strided vs. coalesced global memory throughput; build bank-conflict-free shared-memory transpose" },
+                { id: "w15-2", text: "Inspect global load/store efficiency and shared memory bank conflicts in Nsight Compute" },
+                { id: "w15-3", text: "Open Source (6h): Submit a code/test/performance PR to a C++/CUDA/ML-systems repo (e.g., Eigen, llama.cpp, GGML)" },
+                { id: "w15-4", text: "Practical Output: Nsight Compute memory analysis report comparing naive vs. padded shared-memory transpose" }
+              ],
+              exitCheck: "Zero shared-memory bank conflicts verified in Nsight Compute; 2nd OSS PR submitted."
+            },
+            {
+              week: 16,
+              topics: "Shared-Memory Tiled GEMM & 20+ Cumulative Applications",
+              output: "Tiled CUDA GEMM kernel + 20+ cumulative applications + mock interview #1",
+              tasks: [
+                { id: "w16-1", text: "Implement naive global-memory CUDA matmul baseline and shared-memory tiled matmul (__shared__ + __syncthreads)" },
+                { id: "w16-2", text: "Verify exact numerical equivalence against PyTorch/cuBLAS within FP32 tolerance" },
+                { id: "w16-3", text: "Employability (6h): Reach 20+ targeted applications + complete 1 full 60-min C++/DSA/OS mock interview" },
+                { id: "w16-4", text: "Practical Output: Tiled CUDA matmul benchmarked vs. naive CUDA and cuBLAS" }
+              ],
+              exitCheck: "20+ applications submitted; non-trivial shared-memory CUDA GEMM kernel debugged and documented."
+            }
+          ]
+        },
+        {
+          month: 5,
+          part: 1,
+          title: "Month 5 — Employability + Open-Source Readiness + Tensor Foundations",
+          subtitle: "Part I: Employability Sprint | Register-Tiled GEMM • Softmax/LayerNorm • Strided Tensor Engine • Mock Interviews & OSS",
+          exitCriteriaId: "exit-m5",
+          exitCriteriaText: "Month 5 Exit Criteria: Complete CUDA kernel library with Nsight profiling, strided C++/CUDA tensor core, 35+ applications, and passed mock technical interview loop.",
+          weeks: [
+            {
+              week: 17,
+              topics: "2D Register-Tiled GEMM & Nsight Roofline Profiling",
+              output: "High-throughput 2D thread-tiled GEMM (% of cuBLAS) + Roofline report",
+              tasks: [
+                { id: "w17-1", text: "Optimize CUDA GEMM with 2D register blocking per thread and float4 vectorized global loads" },
+                { id: "w17-2", text: "Profile occupancy, register pressure, and Roofline compute/memory bounds in Nsight Compute & Nsight Systems" },
+                { id: "w17-3", text: "Open Source & Study (5h): Study NVIDIA CUTLASS tiling docs and continue active OSS issue/PR work" },
+                { id: "w17-4", text: "Practical Output: Reproducible GEMM progression chart (Naive -> Shared -> 2D Register Tiled vs cuBLAS)" }
+              ],
+              exitCheck: "Documented GEMM kernel progression with Nsight Compute screenshots and Roofline analysis."
+            },
+            {
+              week: 18,
+              topics: "Numerically Stable Softmax & LayerNorm CUDA Kernels + PyTorch Binding",
+              output: "CUDA Softmax & LayerNorm kernels bound to PyTorch via C++ extension",
+              tasks: [
+                { id: "w18-1", text: "Implement online/safe row-wise Softmax kernel (max-subtraction + warp reduction)" },
+                { id: "w18-2", text: "Implement LayerNorm CUDA kernel and bind custom kernels into PyTorch via pybind11/C++ extension" },
+                { id: "w18-3", text: "Employability (6h): Submit 10 more applications (30+ total) + practice 10 hard-ish DSA problems" },
+                { id: "w18-4", text: "Practical Output: Verified custom PyTorch CUDA operators outperforming unfused eager PyTorch ops" }
+              ],
+              exitCheck: "Custom CUDA Softmax & LayerNorm match torch.nn.functional outputs within 1e-5 tolerance."
+            },
+            {
+              week: 19,
+              topics: "Mini Tensor Engine Bridge: Storage, Strides, Views & Broadcasting",
+              output: "Strided C++ Tensor class with zero-copy transpose/slice & NumPy verification",
+              tasks: [
+                { id: "w19-1", text: "Initialize Repo 03 (mini-tensor-attention-lab): implement 1D contiguous Storage with shared ownership" },
+                { id: "w19-2", text: "Implement N-dimensional shapes, strides, zero-copy slicing/transposition, and NumPy-style broadcasting" },
+                { id: "w19-3", text: "Interview Prep (6h): Complete mock interview #2 covering C++ memory/RAII, OS threads/epoll, and DSA" },
+                { id: "w19-4", text: "Practical Output: Verified strided Tensor library passing NumPy ground-truth equivalence tests" }
+              ],
+              exitCheck: "Non-contiguous sliced/transposed tensors index accurately with zero ASan leaks."
+            },
+            {
+              week: 20,
+              topics: "Portfolio Audit, OSS Readiness & Final Employability Sprint Checkpoint",
+              output: "3 polished public repositories + 35+ applications + interview readiness sign-off",
+              tasks: [
+                { id: "w20-1", text: "Audit all 3 repos (concurrent-task-engine, cuda-kernel-lab, mini-tensor-attention-lab) for READMEs, diagrams & benchmarks" },
+                { id: "w20-2", text: "Summarize merged/submitted Open-Source PRs and systems benchmarks on GitHub profile & resume" },
+                { id: "w20-3", text: "Employability (7h): Complete mock interview #3 (Systems Design + Concurrency) + reach 35+ applications" },
+                { id: "w20-4", text: "Practical Output: Published 5-month employability portfolio & technical retrospective blog/README" }
+              ],
+              exitCheck: "Part I Complete: 3 documented systems/GPU repos, 130+ DSA problems, active OSS PRs, and active interview pipeline."
+            }
+          ]
+        },
+        {
+          month: 6,
+          part: 2,
+          title: "Month 6 — Transition into GPU & ML Inference Specialization",
+          subtitle: "Part II: Specialization Bridge (Weeks 21–24) | Kernel Fusion • FlashAttention Prototype • KV-Cache & Decoder Inference Primitives",
+          exitCriteriaId: "exit-m6",
+          exitCriteriaText: "Month 6 Exit Criteria: Working FlashAttention-style tiled CUDA kernel, KV-cached autoregressive decoder prototype, and Nsight HBM traffic benchmarks launching Part III (Months 7–24).",
+          weeks: [
+            {
+              week: 21,
+              topics: "Kernel Fusion & HBM Memory Traffic Reduction",
+              output: "Fused CUDA Linear-Bias-GELU / Residual-LayerNorm kernel + Nsight DRAM byte proof",
+              tasks: [
+                { id: "w21-1", text: "Measure global memory read/write traffic of unfused ops vs. single-pass fused CUDA kernel" },
+                { id: "w21-2", text: "Implement fused epilogue/activation kernel keeping intermediate activations in registers/SRAM" },
+                { id: "w21-3", text: "Study IEEE 754 FP32/FP16/BF16 numerical stability and mixed-precision accumulation" },
+                { id: "w21-4", text: "Practical Output: Nsight Compute comparison proving reduced DRAM read/write bytes and lower latency" }
+              ],
+              exitCheck: "Nsight Compute confirms >=30% reduction in global memory traffic compared to unfused kernel sequence."
+            },
+            {
+              week: 22,
+              topics: "Scaled Dot-Product Attention & FlashAttention IO-Aware Theory",
+              output: "CPU/PyTorch reference attention + analytical O(N^2) HBM traffic model",
+              tasks: [
+                { id: "w22-1", text: "Read the original FlashAttention paper (Problem: O(N^2) HBM reads/writes -> Solution: SRAM tiling + online softmax)" },
+                { id: "w22-2", text: "Implement scaled dot-product attention (Q * K^T / sqrt(d) -> causal mask -> softmax -> * V) in C++ and PyTorch" },
+                { id: "w22-3", text: "Build sequence-length scaling harness (N = 128, 512, 1024, 2048, 4096) measuring VRAM and latency" },
+                { id: "w22-4", text: "Practical Output: Verified reference attention implementation + HBM memory bottleneck report" }
+              ],
+              exitCheck: "Reference attention passes strict tolerance checks; analytical vs. measured VRAM growth documented."
+            },
+            {
+              week: 23,
+              topics: "Tiled Attention & Online Softmax CUDA Prototype",
+              output: "FlashAttention-style tiled CUDA forward kernel (no N x N HBM materialization)",
+              tasks: [
+                { id: "w23-1", text: "Implement naive materialized CUDA attention baseline (writing N x N score matrix to global memory)" },
+                { id: "w23-2", text: "Implement online softmax running-max and exponential rescaling across K/V shared-memory tiles" },
+                { id: "w23-3", text: "Verify exact numerical equivalence against PyTorch scaled_dot_product_attention" },
+                { id: "w23-4", text: "Practical Output: Working tiled CUDA attention kernel avoiding O(N^2) global memory allocation" }
+              ],
+              exitCheck: "Tiled CUDA attention matches PyTorch output within FP32 tolerance and uses O(N) auxiliary memory."
+            },
+            {
+              week: 24,
+              topics: "KV-Cache Decoder Inference Prototype & Specialization Launch",
+              output: "Minimal autoregressive transformer block with KV-cache + Capstone write-up",
+              tasks: [
+                { id: "w24-1", text: "Implement pre-allocated KV-cache buffers and autoregressive token step (prefill vs. decode) in C++/CUDA" },
+                { id: "w24-2", text: "Profile naive vs. tiled attention and prefill vs. decode bottlenecks in Nsight Compute" },
+                { id: "w24-3", text: "Publish comprehensive specialization bridge write-up & architecture diagram in Repo 03" },
+                { id: "w24-4", text: "Practical Output: Complete 24-week portfolio ready to transition into Part III (Months 7–24 Serving & Distributed Systems)" }
+              ],
+              exitCheck: "Week 24 Complete: End-to-end demonstration from C++ systems & concurrency to custom CUDA attention & KV-cached inference."
+            }
+          ]
+        }
+      ]
+    };
+
+    const STORAGE_KEY = "ai_infra_24w_employability_tracker_v1";
+
+    let state = {
+      checked: {},
+      notes: {},
+      openNotes: {},
+      activeFilter: "all",
+      blueprintOpen: false
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = { ...state, ...parsed };
+        }
+      } catch (err) {
+        console.error("Failed to load state from localStorage:", err);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (err) {
+        showToast("Warning: Could not persist progress to localStorage.", "error");
+      }
+      updateStats();
+    }
+
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = `toast ${type === "error" ? "error" : ""}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 260);
+      }, 2600);
+    }
+
+    function getActiveWeekNumber() {
+      for (const m of ROADMAP_DATA.months) {
+        for (const w of m.weeks) {
+          const allDone = w.tasks.every(t => !!state.checked[t.id]);
+          if (!allDone) return w.week;
+        }
+      }
+      return 24;
+    }
+
+    function updateStats() {
+      let totalTasks = 0;
+      let completedTasks = 0;
+      let completedWeeks = 0;
+
+      let starterDone = 0;
+      ROADMAP_DATA.starterChecklist.forEach(item => {
+        totalTasks++;
+        if (state.checked[item.id]) {
+          completedTasks++;
+          starterDone++;
+        }
+      });
+      document.getElementById("starter-count").textContent = `${starterDone}/${ROADMAP_DATA.starterChecklist.length} completed`;
+
+      ROADMAP_DATA.months.forEach(m => {
+        totalTasks++;
+        if (state.checked[m.exitCriteriaId]) completedTasks++;
+
+        m.weeks.forEach(w => {
+          let weekDone = 0;
+          w.tasks.forEach(t => {
+            totalTasks++;
+            if (state.checked[t.id]) {
+              completedTasks++;
+              weekDone++;
+            }
+          });
+          if (weekDone === w.tasks.length && w.tasks.length > 0) {
+            completedWeeks++;
+          }
+
+          const badgeEl = document.getElementById(`week-badge-${w.week}`);
+          const cardEl = document.getElementById(`week-card-${w.week}`);
+          if (badgeEl && cardEl) {
+            badgeEl.textContent = `${weekDone}/${w.tasks.length}`;
+            if (weekDone === w.tasks.length) {
+              badgeEl.classList.add("done");
+              cardEl.classList.add("is-complete");
+            } else {
+              badgeEl.classList.remove("done");
+              cardEl.classList.remove("is-complete");
+            }
+          }
+        });
+      });
+
+      const pct = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+      document.getElementById("stat-tasks").textContent = `${completedTasks}/${totalTasks}`;
+      document.getElementById("stat-weeks").textContent = `${completedWeeks}/24`;
+      document.getElementById("stat-pct").textContent = `${pct}%`;
+      document.getElementById("stat-bar").style.width = `${pct}%`;
+    }
+
+    function renderStarterChecklist() {
+      const grid = document.getElementById("starter-tasks-grid");
+      grid.innerHTML = "";
+      ROADMAP_DATA.starterChecklist.forEach(item => {
+        const isChecked = !!state.checked[item.id];
+        const label = document.createElement("label");
+        label.className = "task-item is-output-task";
+        label.innerHTML = `
+          <input type="checkbox" data-id="${item.id}" ${isChecked ? "checked" : ""} class="task-checkbox" />
+          <span class="task-text">${item.text}</span>
+        `;
+        grid.appendChild(label);
+      });
+    }
+
+    function createPartBanner(partNumber) {
+      const banner = document.createElement("div");
+      if (partNumber === 1) {
+        banner.className = "part-banner";
+        banner.innerHTML = `
+          <div>
+            <div class="part-label">PART I // WEEKS 1–20</div>
+            <div class="part-heading">Five-Month Employability &amp; Open-Source Sprint</div>
+          </div>
+          <div class="part-desc">C++17/20 + DSA + Linux &rarr; OS/Concurrency/Net &rarr; Concurrent Task Engine &rarr; CUDA + OSS PRs + Internships</div>
+        `;
+      } else {
+        banner.className = "part-banner part-two";
+        banner.innerHTML = `
+          <div>
+            <div class="part-label">PART II // WEEKS 21–24</div>
+            <div class="part-heading">Transition into GPU &amp; ML Inference Specialization</div>
+          </div>
+          <div class="part-desc">Kernel Fusion &rarr; FlashAttention Online-Softmax CUDA &rarr; KV-Cache Inference Bridge (Unlocks Part III: Months 7–24)</div>
+        `;
+      }
+      return banner;
+    }
+
+    function renderMonths() {
+      const container = document.getElementById("months-container");
+      container.innerHTML = "";
+      const activeWeek = getActiveWeekNumber();
+
+      const starterCard = document.getElementById("starting-checklist-card");
+      if (state.activeFilter === "current") {
+        starterCard.classList.add("hidden");
+      } else {
+        starterCard.classList.remove("hidden");
+      }
+
+      let renderedPart1Banner = false;
+      let renderedPart2Banner = false;
+
+      ROADMAP_DATA.months.forEach(monthObj => {
+        const visibleWeeks = monthObj.weeks.filter(w => {
+          if (state.activeFilter === "all") return true;
+          if (state.activeFilter === "current") return w.week === activeWeek;
+          return String(monthObj.month) === state.activeFilter;
+        });
+
+        if (visibleWeeks.length === 0) return;
+
+        // Render Part I / Part II section headers when viewing All or relevant months
+        if (monthObj.part === 1 && !renderedPart1Banner) {
+          container.appendChild(createPartBanner(1));
+          renderedPart1Banner = true;
+        }
+        if (monthObj.part === 2 && !renderedPart2Banner) {
+          container.appendChild(createPartBanner(2));
+          renderedPart2Banner = true;
+        }
+
+        const monthSection = document.createElement("section");
+        monthSection.className = "month-section";
+
+        const isPartTwo = monthObj.part === 2;
+        monthSection.innerHTML = `
+          <div class="month-header ${isPartTwo ? "part-two-border" : ""}">
+            <div class="month-tag">MONTH 0${monthObj.month} // WEEKS ${(monthObj.month - 1) * 4 + 1}–${monthObj.month * 4}</div>
+            <h2 class="month-title">${monthObj.title}</h2>
+            <p class="month-subtitle">${monthObj.subtitle}</p>
+          </div>
+        `;
+
+        const weeksGrid = document.createElement("div");
+        weeksGrid.className = `weeks-grid ${state.activeFilter === "current" ? "single-focus" : ""}`;
+
+        visibleWeeks.forEach(weekObj => {
+          const isCurrentActive = weekObj.week === activeWeek;
+          const allWeekDone = weekObj.tasks.every(t => !!state.checked[t.id]);
+
+          const card = document.createElement("article");
+          card.id = `week-card-${weekObj.week}`;
+          card.className = `week-card ${allWeekDone ? "is-complete" : ""} ${isCurrentActive && !allWeekDone ? "is-active-week" : ""}`;
+
+          const tasksHtml = weekObj.tasks.map(t => {
+            const checked = !!state.checked[t.id];
+            const isOutput = t.text.startsWith("Practical Output:");
+            return `
+              <label class="task-item ${isOutput ? "is-output-task" : ""}">
+                <input type="checkbox" data-id="${t.id}" ${checked ? "checked" : ""} class="task-checkbox" />
+                <span class="task-text">${t.text}</span>
+              </label>
+            `;
+          }).join("");
+
+          const noteVal = state.notes[weekObj.week] || "";
+          const noteOpen = !!state.openNotes[weekObj.week] || noteVal.trim().length > 0;
+
+          card.innerHTML = `
+            <div>
+              <div class="week-top">
+                <div>
+                  <div class="week-meta">
+                    <span class="week-num">WEEK ${String(weekObj.week).padStart(2, "0")}</span>
+                    <span class="part-pill ${isPartTwo ? "p2" : ""}">Part ${isPartTwo ? "II" : "I"}</span>
+                    <span style="color:var(--text-muted)">Month ${monthObj.month}</span>
+                    ${isCurrentActive && !allWeekDone ? '<span class="active-pill">Active</span>' : ''}
+                  </div>
+                  <h3 class="week-topics">${weekObj.topics}</h3>
+                </div>
+                <span id="week-badge-${weekObj.week}" class="week-badge">0/${weekObj.tasks.length}</span>
+              </div>
+
+              <div class="output-pill">
+                <span class="output-label">DELIVERABLE &rarr;</span>
+                <span class="output-val">${weekObj.output}</span>
+              </div>
+
+              <div class="tasks-list">
+                ${tasksHtml}
+              </div>
+
+              <div class="week-exit-box">
+                <strong>Weekly Exit Check:</strong> ${weekObj.exitCheck}
+              </div>
+            </div>
+
+            <div class="notes-footer">
+              <button type="button" data-toggle-note="${weekObj.week}" class="note-toggle-btn">
+                <span>${noteOpen ? "[-] Engineering Notes / Git Commits / PR Links" : "[+] Add Engineering Notes / Git Commits / PR Links"}</span>
+                ${noteVal.trim() ? '<span style="color:var(--success)">saved</span>' : ''}
+              </button>
+              <div class="${noteOpen ? "" : "hidden"}">
+                <textarea
+                  data-note-week="${weekObj.week}"
+                  rows="2"
+                  placeholder="Log Git commit hashes, OSS PR URLs, benchmark numbers (QPS, GFLOP/s, p99 ms), or interview notes..."
+                  class="note-textarea"
+                >${noteVal}</textarea>
+              </div>
+            </div>
+          `;
+
+          weeksGrid.appendChild(card);
+        });
+
+        monthSection.appendChild(weeksGrid);
+
+        if (state.activeFilter !== "current") {
+          const exitChecked = !!state.checked[monthObj.exitCriteriaId];
+          const exitBanner = document.createElement("div");
+          exitBanner.className = `exit-banner ${exitChecked ? "checked" : ""}`;
+          exitBanner.innerHTML = `
+            <label class="exit-label">
+              <input type="checkbox" data-id="${monthObj.exitCriteriaId}" ${exitChecked ? "checked" : ""} class="task-checkbox" />
+              <span class="exit-text">${monthObj.exitCriteriaText}</span>
+            </label>
+          `;
+          monthSection.appendChild(exitBanner);
+        }
+
+        container.appendChild(monthSection);
+      });
+
+      updateStats();
+    }
+
+    document.addEventListener("change", (e) => {
+      if (e.target.matches("input[type='checkbox'][data-id]")) {
+        const id = e.target.getAttribute("data-id");
+        state.checked[id] = e.target.checked;
+        saveState();
+        if (id.startsWith("exit-") || state.activeFilter === "current") {
+          renderMonths();
+        }
+      }
+    });
+
+    document.addEventListener("input", (e) => {
+      if (e.target.matches("textarea[data-note-week]")) {
+        const week = e.target.getAttribute("data-note-week");
+        state.notes[week] = e.target.value;
+        saveState();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      const noteToggle = e.target.closest("[data-toggle-note]");
+      if (noteToggle) {
+        const week = noteToggle.getAttribute("data-toggle-note");
+        state.openNotes[week] = !state.openNotes[week];
+        saveState();
+        renderMonths();
+        return;
+      }
+
+      const filterBtn = e.target.closest(".filter-btn");
+      if (filterBtn) {
+        state.activeFilter = filterBtn.getAttribute("data-filter");
+        document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+        filterBtn.classList.add("active");
+        saveState();
+        renderMonths();
+      }
+    });
+
+    const blueprintDrawer = document.getElementById("blueprint-drawer");
+    const toggleBlueprintBtn = document.getElementById("toggle-blueprint-btn");
+    const closeBlueprintBtn = document.getElementById("close-blueprint-btn");
+
+    function setBlueprintVisibility(open) {
+      state.blueprintOpen = open;
+      if (open) {
+        blueprintDrawer.classList.remove("hidden");
+        toggleBlueprintBtn.textContent = "[ - ] Hide Master Blueprint & Part III";
+      } else {
+        blueprintDrawer.classList.add("hidden");
+        toggleBlueprintBtn.textContent = "[ + ] Master Blueprint & Part III (Months 7–24)";
+      }
+      saveState();
+    }
+
+    toggleBlueprintBtn.addEventListener("click", () => setBlueprintVisibility(!state.blueprintOpen));
+    closeBlueprintBtn.addEventListener("click", () => setBlueprintVisibility(false));
+
+    document.getElementById("export-btn").addEventListener("click", () => {
+      try {
+        const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `systems-ai-infra-employability-progress-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast("Progress exported to JSON.");
+      } catch (err) {
+        showToast("Export failed.", "error");
+      }
+    });
+
+    document.getElementById("import-input").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const imported = JSON.parse(evt.target.result);
+          if (imported && typeof imported === "object" && imported.checked) {
+            state = {
+              checked: imported.checked || {},
+              notes: imported.notes || {},
+              openNotes: imported.openNotes || {},
+              activeFilter: imported.activeFilter || "all",
+              blueprintOpen: !!imported.blueprintOpen
+            };
+            saveState();
+            renderStarterChecklist();
+            renderMonths();
+            setBlueprintVisibility(state.blueprintOpen);
+            showToast("Progress imported successfully.");
+          } else {
+            showToast("Invalid backup JSON format.", "error");
+          }
+        } catch (err) {
+          showToast("Failed to parse JSON file.", "error");
+        }
+        e.target.value = "";
+      };
+      reader.readAsText(file);
+    });
+
+    const confirmModal = document.getElementById("confirm-modal");
+    document.getElementById("reset-btn").addEventListener("click", () => {
+      confirmModal.classList.remove("hidden");
+    });
+    document.getElementById("cancel-reset-btn").addEventListener("click", () => {
+      confirmModal.classList.add("hidden");
+    });
+    document.getElementById("confirm-reset-btn").addEventListener("click", () => {
+      state = { checked: {}, notes: {}, openNotes: {}, activeFilter: "all", blueprintOpen: false };
+      saveState();
+      renderStarterChecklist();
+      renderMonths();
+      setBlueprintVisibility(false);
+      confirmModal.classList.add("hidden");
+      showToast("All progress reset.");
+    });
+
+    loadState();
+    renderStarterChecklist();
+    renderMonths();
+    setBlueprintVisibility(state.blueprintOpen);
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      if (btn.getAttribute("data-filter") === state.activeFilter) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+  </script>
+</body>
+</html>
