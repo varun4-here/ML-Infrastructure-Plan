@@ -182,6 +182,76 @@
       background: var(--bg-surface-hover);
     }
 
+
+    .btn-sync {
+      border-color: var(--accent-border);
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .btn-sync.connected {
+      border-color: var(--success-border);
+      background: var(--success-dim);
+      color: var(--success);
+    }
+    .btn-sync.syncing {
+      border-color: var(--warning-border);
+      background: var(--warning-dim);
+      color: var(--warning);
+    }
+    .btn-sync.error {
+      border-color: var(--danger-border);
+      background: var(--danger-dim);
+      color: var(--danger);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 5px;
+    }
+
+    .form-input {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-canvas);
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-white);
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .btn-solid-accent {
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background: #1f6feb;
+      padding: 7px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .btn-solid-accent:hover { background: #388bfd; }
+
     .btn-danger {
       color: var(--danger);
     }
@@ -818,7 +888,7 @@
 
     .modal-box {
       width: 100%;
-      max-width: 420px;
+      max-width: 480px;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--bg-surface);
@@ -905,6 +975,39 @@
   <!-- Toast Container -->
   <div id="toast-container" class="toast-container"></div>
 
+  <!-- GitHub Gist Cloud Sync Modal -->
+  <div id="sync-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <h3 class="modal-title">GitHub Gist Cloud Sync</h3>
+      <p class="modal-desc">
+        Sync your progress automatically between your laptop and phone using a private GitHub Gist. Your token is stored only in this browser's <code>localStorage</code> and never committed to any repo.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="gist-token-input">1. GitHub Personal Access Token (PAT)</label>
+        <input id="gist-token-input" type="password" placeholder="ghp_... or github_pat_..." class="form-input" />
+        <div class="form-hint">Create a Classic PAT with <strong>gist</strong> scope (or Fine-grained PAT with <strong>Gists: Read and write</strong>).</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="gist-id-input">2. Private Gist ID (Leave blank on first device to auto-create)</label>
+        <input id="gist-id-input" type="text" placeholder="e.g., aa5a315d61ae9438b18d" class="form-input" />
+        <div class="form-hint">On your second device (e.g., phone), paste the same PAT and the Gist ID generated on your first device, then click <strong>Pull from Cloud</strong>.</div>
+      </div>
+
+      <div id="sync-status-detail" style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);background:var(--bg-canvas);padding:8px 10px;border-radius:6px;border:1px solid var(--border);">
+        Status: Not configured (Local storage only)
+      </div>
+
+      <div class="modal-actions" style="flex-wrap:wrap;">
+        <button id="disconnect-gist-btn" class="btn btn-danger" style="margin-right:auto;">Disconnect</button>
+        <button id="close-sync-btn" class="btn">Close</button>
+        <button id="pull-gist-btn" class="btn">Pull from Cloud</button>
+        <button id="save-sync-btn" class="btn-solid-accent">Save &amp; Push Now</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Confirmation Modal -->
   <div id="confirm-modal" class="modal-backdrop hidden">
     <div class="modal-box">
@@ -952,6 +1055,9 @@
           </div>
 
           <div class="action-group">
+            <button id="open-sync-btn" class="btn btn-sync" title="Configure GitHub Gist Cross-Device Sync">
+              <span id="sync-btn-label">Cloud Sync: Setup</span>
+            </button>
             <button id="export-btn" class="btn" title="Download JSON backup">Export JSON</button>
             <label class="btn" title="Restore JSON backup">
               Import JSON
@@ -1475,14 +1581,25 @@
     };
 
     const STORAGE_KEY = "ai_infra_24w_employability_tracker_v1";
+    const SYNC_CONFIG_KEY = "ai_infra_gist_sync_v1";
+    const GIST_FILENAME = "systems_ai_infra_employability_progress.json";
 
     let state = {
       checked: {},
       notes: {},
       openNotes: {},
       activeFilter: "all",
-      blueprintOpen: false
+      blueprintOpen: false,
+      updatedAt: 0
     };
+
+    let syncConfig = {
+      token: "",
+      gistId: "",
+      lastSyncedAt: ""
+    };
+
+    let syncDebounceTimer = null;
 
     function loadState() {
       try {
@@ -1491,18 +1608,184 @@
           const parsed = JSON.parse(raw);
           state = { ...state, ...parsed };
         }
+        const rawSync = localStorage.getItem(SYNC_CONFIG_KEY);
+        if (rawSync) {
+          syncConfig = { ...syncConfig, ...JSON.parse(rawSync) };
+        }
       } catch (err) {
         console.error("Failed to load state from localStorage:", err);
       }
     }
 
-    function saveState() {
+    function saveSyncConfig() {
+      try {
+        localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
+      } catch (err) {
+        console.error("Failed to save sync config:", err);
+      }
+      updateSyncUI();
+    }
+
+    function saveState(triggerCloudSync = true) {
+      state.updatedAt = Date.now();
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       } catch (err) {
         showToast("Warning: Could not persist progress to localStorage.", "error");
       }
       updateStats();
+
+      if (triggerCloudSync && syncConfig.token && syncConfig.gistId) {
+        clearTimeout(syncDebounceTimer);
+        setSyncButtonState("syncing", "Syncing...");
+        syncDebounceTimer = setTimeout(() => {
+          pushToGist(true);
+        }, 900);
+      }
+    }
+
+    function setSyncButtonState(statusClass, labelText) {
+      const btn = document.getElementById("open-sync-btn");
+      const label = document.getElementById("sync-btn-label");
+      btn.classList.remove("connected", "syncing", "error");
+      if (statusClass) btn.classList.add(statusClass);
+      label.textContent = labelText;
+    }
+
+    function updateSyncUI() {
+      const detailEl = document.getElementById("sync-status-detail");
+      if (syncConfig.token && syncConfig.gistId) {
+        setSyncButtonState("connected", "Cloud Sync: On");
+        detailEl.innerHTML = `Status: <strong style="color:var(--success)">Connected</strong> · Gist ID: <code>${syncConfig.gistId}</code>${syncConfig.lastSyncedAt ? `<br>Last synced: ${syncConfig.lastSyncedAt}` : ""}`;
+      } else if (syncConfig.token) {
+        setSyncButtonState("syncing", "Cloud Sync: No Gist");
+        detailEl.innerHTML = `Status: Token saved, click <strong>Save &amp; Push Now</strong> to create your private Gist.`;
+      } else {
+        setSyncButtonState("", "Cloud Sync: Setup");
+        detailEl.innerHTML = `Status: Not configured (Local storage only)`;
+      }
+    }
+
+    async function pushToGist(silent = false) {
+      if (!syncConfig.token) {
+        if (!silent) showToast("Enter a GitHub Personal Access Token first.", "error");
+        return;
+      }
+
+      setSyncButtonState("syncing", "Syncing...");
+      const payloadContent = JSON.stringify({
+        checked: state.checked,
+        notes: state.notes,
+        openNotes: state.openNotes,
+        updatedAt: state.updatedAt || Date.now()
+      }, null, 2);
+
+      try {
+        if (!syncConfig.gistId) {
+          const res = await fetch("https://api.github.com/gists", {
+            method: "POST",
+            headers: {
+              "Accept": "application/vnd.github+json",
+              "Authorization": `Bearer ${syncConfig.token}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              description: "Systems & AI Infrastructure — 24-Week Employability Roadmap Progress",
+              public: false,
+              files: {
+                [GIST_FILENAME]: { content: payloadContent }
+              }
+            })
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || `HTTP ${res.status}`);
+          }
+
+          const created = await res.json();
+          syncConfig.gistId = created.id;
+          document.getElementById("gist-id-input").value = created.id;
+          syncConfig.lastSyncedAt = new Date().toLocaleTimeString();
+          saveSyncConfig();
+          if (!silent) showToast(`Created private Gist (${created.id}) & synced!`);
+        } else {
+          const res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+            method: "PATCH",
+            headers: {
+              "Accept": "application/vnd.github+json",
+              "Authorization": `Bearer ${syncConfig.token}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              files: {
+                [GIST_FILENAME]: { content: payloadContent }
+              }
+            })
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || `HTTP ${res.status}`);
+          }
+
+          syncConfig.lastSyncedAt = new Date().toLocaleTimeString();
+          saveSyncConfig();
+          if (!silent) showToast("Synced progress to GitHub Gist.");
+        }
+      } catch (err) {
+        setSyncButtonState("error", "Sync Error");
+        if (!silent) showToast(`Sync failed: ${err.message}`, "error");
+        console.error("Gist push failed:", err);
+      }
+    }
+
+    async function pullFromGist(silent = false) {
+      if (!syncConfig.token || !syncConfig.gistId) {
+        if (!silent) showToast("Both PAT and Gist ID are required to pull.", "error");
+        return;
+      }
+
+      setSyncButtonState("syncing", "Pulling...");
+      try {
+        const res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+          method: "GET",
+          headers: {
+            "Accept": "application/vnd.github+json",
+            "Authorization": `Bearer ${syncConfig.token}`
+          },
+          cache: "no-store"
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `HTTP ${res.status}`);
+        }
+
+        const gist = await res.json();
+        const fileObj = gist.files && gist.files[GIST_FILENAME];
+        if (!fileObj || !fileObj.content) {
+          throw new Error(`File ${GIST_FILENAME} not found in Gist.`);
+        }
+
+        const remoteData = JSON.parse(fileObj.content);
+        if (remoteData && typeof remoteData === "object") {
+          state.checked = remoteData.checked || {};
+          state.notes = remoteData.notes || {};
+          state.openNotes = remoteData.openNotes || {};
+          state.updatedAt = remoteData.updatedAt || Date.now();
+          saveState(false);
+          renderStarterChecklist();
+          renderMonths();
+          syncConfig.lastSyncedAt = new Date().toLocaleTimeString();
+          saveSyncConfig();
+          if (!silent) showToast("Pulled latest progress from cloud.");
+        }
+      } catch (err) {
+        setSyncButtonState("error", "Sync Error");
+        if (!silent) showToast(`Pull failed: ${err.message}`, "error");
+        console.error("Gist pull failed:", err);
+      }
     }
 
     function showToast(message, type = "info") {
@@ -1794,7 +2077,7 @@
         state.activeFilter = filterBtn.getAttribute("data-filter");
         document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
         filterBtn.classList.add("active");
-        saveState();
+        saveState(false);
         renderMonths();
       }
     });
@@ -1812,7 +2095,7 @@
         blueprintDrawer.classList.add("hidden");
         toggleBlueprintBtn.textContent = "[ + ] Master Blueprint & Part III (Months 7–24)";
       }
-      saveState();
+      saveState(false);
     }
 
     toggleBlueprintBtn.addEventListener("click", () => setBlueprintVisibility(!state.blueprintOpen));
@@ -1883,10 +2166,42 @@
       showToast("All progress reset.");
     });
 
+    // Cloud Sync Modal Controls
+    const syncModal = document.getElementById("sync-modal");
+    document.getElementById("open-sync-btn").addEventListener("click", () => {
+      document.getElementById("gist-token-input").value = syncConfig.token || "";
+      document.getElementById("gist-id-input").value = syncConfig.gistId || "";
+      updateSyncUI();
+      syncModal.classList.remove("hidden");
+    });
+    document.getElementById("close-sync-btn").addEventListener("click", () => {
+      syncModal.classList.add("hidden");
+    });
+    document.getElementById("save-sync-btn").addEventListener("click", async () => {
+      syncConfig.token = document.getElementById("gist-token-input").value.trim();
+      syncConfig.gistId = document.getElementById("gist-id-input").value.trim();
+      saveSyncConfig();
+      await pushToGist(false);
+    });
+    document.getElementById("pull-gist-btn").addEventListener("click", async () => {
+      syncConfig.token = document.getElementById("gist-token-input").value.trim();
+      syncConfig.gistId = document.getElementById("gist-id-input").value.trim();
+      saveSyncConfig();
+      await pullFromGist(false);
+    });
+    document.getElementById("disconnect-gist-btn").addEventListener("click", () => {
+      syncConfig = { token: "", gistId: "", lastSyncedAt: "" };
+      document.getElementById("gist-token-input").value = "";
+      document.getElementById("gist-id-input").value = "";
+      saveSyncConfig();
+      showToast("Disconnected from GitHub Gist.");
+    });
+
     loadState();
     renderStarterChecklist();
     renderMonths();
     setBlueprintVisibility(state.blueprintOpen);
+    updateSyncUI();
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
       if (btn.getAttribute("data-filter") === state.activeFilter) {
@@ -1895,6 +2210,11 @@
         btn.classList.remove("active");
       }
     });
+
+    // Auto-pull latest state from Gist on page load if configured & online
+    if (syncConfig.token && syncConfig.gistId && navigator.onLine) {
+      pullFromGist(true);
+    }
   </script>
 </body>
 </html>
